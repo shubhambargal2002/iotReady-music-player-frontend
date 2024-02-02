@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
 import axios from "axios";
-const host = "http://localhost:5000";
+const host = "https://iotready-music-player-shubham-bargal.onrender.com";
 
 function App() {
   const [playlist, setPlaylist] = useState([]);
