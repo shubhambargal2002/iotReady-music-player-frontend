@@ -7,6 +7,7 @@ function App() {
   const [playlist, setPlaylist] = useState([]);
   const [currentTrack, setCurrentTrack] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
   const audioRef = useRef(null);
 
   useEffect(() => {
@@ -44,6 +45,9 @@ function App() {
       formData.append("audioFile", selectedFile);
 
       try {
+        // Set uploading state to true
+        setUploading(true);
+
         await axios.post(`${host}/upload`, formData);
         fetchPlaylist();
         setSelectedFile(null);
@@ -52,6 +56,9 @@ function App() {
         document.getElementById("fileInput").value = "";
       } catch (error) {
         console.error("Error uploading file:", error);
+      } finally {
+        // Set uploading state back to false after upload completion (success or failure)
+        setUploading(false);
       }
     }
   };
@@ -110,8 +117,9 @@ function App() {
           accept=".mp3"
           id="fileInput"
           onChange={handleFileChange}
+          disabled={uploading} // Disable the button during uploading
         />
-        <button onClick={handleUpload} className="upload_button">Upload</button>
+        <button onClick={handleUpload} className="upload_button">{uploading ? "Uploading..." : "Upload"}</button>
         </div>
         <div className="playlist_container">
             {playlist.map((track) => (
